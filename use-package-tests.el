@@ -38,6 +38,8 @@
                  '((".foo" . foopkg) (".bar" . foopkg))))
   (should (equal (use-package-normalize-mode 'foopkg :mode '((".foo" ".bar")))
                  '((".foo" . foopkg) (".bar" . foopkg))))
+  (should (equal (use-package-normalize-mode 'foopkg :mode '((".foo")))
+                 '((".foo" . foopkg))))
   (should (equal (use-package-normalize-mode 'foopkg :mode '((".foo" . foo) (".bar" . bar)))
                  '((".foo" . foo) (".bar" . bar)))))
 
