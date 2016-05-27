@@ -25,24 +25,23 @@
 (require 'ert)
 (require 'use-package)
 
-(ert-deftest use-package-mplist-get ()
-  (let ((mplist '(:foo bar baz bal :blob plap plup :blam))
-        (tests '((:foo . (bar baz bal))
-                 (:blob . (plap plup))
-                 (:blam . t)
-                 (:blow . nil))))
-    (mapc (lambda (test)
-            (should
-             (equal
-              (use-package-mplist-get mplist
-                                      (car test))
-              (cdr test))))
-          tests)))
+(ert-deftest use-package-normalize-binder ()
+  (should (equal (use-package-normalize-binder 'foopkg :bind '(("x" . foo)))
+                 '(("x" . foo))))
+  (should (equal (use-package-normalize-binder 'foopkg :bind '(([x] . foo)))
+                 '(([x] . foo)))))
 
-(ert-deftest use-package-mplist-keys ()
-  (should (equal (use-package-mplist-keys
-                  '(:foo bar baz bal :blob plap plup :blam))
-                 '(:foo :blob :blam))))
+(ert-deftest use-package-normalize-mode ()
+  (should (equal (use-package-normalize-mode 'foopkg :mode '(".foo"))
+                 '((".foo" . foopkg))))
+  (should (equal (use-package-normalize-mode 'foopkg :mode '(".foo" ".bar"))
+                 '((".foo" . foopkg) (".bar" . foopkg))))
+  (should (equal (use-package-normalize-mode 'foopkg :mode '((".foo" ".bar")))
+                 '((".foo" . foopkg) (".bar" . foopkg))))
+  (should (equal (use-package-normalize-mode 'foopkg :mode '((".foo")))
+                 '((".foo" . foopkg))))
+  (should (equal (use-package-normalize-mode 'foopkg :mode '((".foo" . foo) (".bar" . bar)))
+                 '((".foo" . foo) (".bar" . bar)))))
 
 ;; Local Variables:
 ;; indent-tabs-mode: nil
